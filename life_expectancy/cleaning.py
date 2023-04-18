@@ -5,12 +5,26 @@ import argparse
 import numpy as np
 import pandas as pd
 
-def clean_data(country = 'PT'):
+def load_data():
+    """
+    load data from file
+    """
+    data = pd.read_csv('life_expectancy/data/eu_life_expectancy_raw.tsv', sep='\t')
+    return data
+
+def save_data(data):
+    """
+    save data to file
+    """
+    data.to_csv('life_expectancy/data/pt_life_expectancy.csv', index = False)
+
+def clean_data(data, country = 'PT'):
     """
     Cleans data.
     """
+    life_expectancy = data
+
     id_variables = ['unit','sex','age','region']
-    life_expectancy = pd.read_csv('life_expectancy/data/eu_life_expectancy_raw.tsv', sep='\t')
 
     life_expectancy[id_variables] = (
         life_expectancy['unit,sex,age,geo\\time'].str.split(',', expand = True)
@@ -34,10 +48,19 @@ def clean_data(country = 'PT'):
     life_expectancy['value'] = life_expectancy['value'].astype(float)
     life_expectancy = life_expectancy.dropna()
 
-    life_expectancy.to_csv('life_expectancy/data/pt_life_expectancy.csv', index = False)
+    return life_expectancy
+
+def main(country = 'PT'):
+    """
+    main function
+    """
+    life_expectancy_data = load_data()
+    life_expectancy_data = clean_data(life_expectancy_data, country)
+    save_data(life_expectancy_data)
 
 if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser(description='Clean data and filter by country')
     parser.add_argument('--country', help='Country to use as filter')
     args = parser.parse_args()
-    clean_data(args)
+
+    main(args["country"])
