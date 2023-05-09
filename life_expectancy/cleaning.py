@@ -1,52 +1,10 @@
 """
-Assignment 1
+Functions to run the cleaning pipeline
 """
-from inspect import getsourcefile
-from os.path import dirname, abspath, join
 import argparse
 import numpy as np
 import pandas as pd
-
-def __get_current_directory_full_path() -> str:
-    """
-    Returns the absolute path of the directory containing the current 
-    Python file.
-    :return: A string representing the absolute path of the directory 
-    containing the current Python file.
-    """
-    current_file_path: str = abspath(getsourcefile(lambda: 0))
-    current_dir_path: str = dirname(current_file_path)
-
-    return current_dir_path
-
-def load_data() -> pd.DataFrame:
-    """
-    Loads the 'eu_life_expectancy_raw.tsv' data file from the 'data' folder
-    :return: Pandas dataframe with data
-    :raises FileNotFoundError: If the 'eu_life_expectancy_raw.tsv' file cannot
-     be found.
-    """
-    path = join(
-        __get_current_directory_full_path(),
-        "data",
-        "eu_life_expectancy_raw.tsv"
-    )
-    data = pd.read_csv(path, sep='\t')
-    return data
-
-def save_data(data: pd.DataFrame) -> None:
-    """
-    Data is saved to a CSV file named 'pt_life_expectancy.csv' in the 'data'
-    folder.
-    :param data: 
-    :return: 
-    """
-    path = join(
-        __get_current_directory_full_path(),
-        "data",
-        "pt_life_expectancy.csv"
-    )
-    data.to_csv(path, index = False)
+from life_expectancy.load_save_data import load_data, save_data
 
 def clean_data(data: pd.DataFrame, country: str = 'PT') -> pd.DataFrame:
     """
@@ -107,16 +65,17 @@ def clean_data(data: pd.DataFrame, country: str = 'PT') -> pd.DataFrame:
 
     return life_expectancy
 
-def main(country = 'PT') -> None:
+def main(country:str = 'PT', path:str = None) -> None:
     """
     Calls load data, clean data and save data
     :param country_code: A string representing the country code of the country
     to be selected.
     :return:
     """
-    life_expectancy_data = load_data()
+    life_expectancy_data = load_data(path)
     life_expectancy_data = clean_data(life_expectancy_data, country)
     save_data(life_expectancy_data)
+    return life_expectancy_data
 
 if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser(description='Clean data and filter by country')
@@ -127,4 +86,4 @@ if __name__ == "__main__":  # pragma: no cover
     )
     args = parser.parse_args()
 
-    main(args["country"])
+    main(args.country)
