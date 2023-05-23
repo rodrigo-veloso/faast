@@ -37,7 +37,7 @@ def save_data(data: pd.DataFrame) -> None:
     """
     Data is saved to a CSV file named 'pt_life_expectancy.csv' in the 'data'
     folder.
-    :param data: 
+    :param data: Pandas Dataframe with the cleaned data
     :return: 
     """
     path = join(

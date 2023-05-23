@@ -56,7 +56,7 @@ def clean_data(data: pd.DataFrame, country: str = 'PT') -> pd.DataFrame:
     life_expectancy['value'] = (
         life_expectancy['value']
         .str.replace(" ", "")
-        .str.replace("e", "")
+        .str.replace(r"[a-zA-Z\s]+", "")
         .replace(":",np.nan)
         .astype(float)
     )
