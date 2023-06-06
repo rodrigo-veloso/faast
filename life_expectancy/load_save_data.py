@@ -17,21 +17,61 @@ def __get_current_directory_full_path() -> str:
 
     return current_dir_path
 
-def load_data(path: str = None) -> pd.DataFrame:
+class DataLoader():
     """
-    Loads the 'eu_life_expectancy_raw.tsv' data file from the 'data' folder
+    This class is responsible for verifying the path and format
+    and assign the right load method
+    """
+
+    def __init__(self, path: str = None, file_format: str = 'csv'):
+        self.path = path
+        self.__check_path()
+        self.file_format = file_format
+        self.__configs = {
+            'csv': {
+                'method': pd.read_csv,
+                'kwargs': {'sep':'\t'}
+            },
+            'json': {
+                'method': pd.read_json,
+                'kwargs': {'orient': 'records'}
+            }
+        }
+
+    def __check_path(self) -> None:
+        """
+        check if a path was passed, if it didn't, reads from default path
+        """
+        if not self.path:
+            self.path = join(
+                __get_current_directory_full_path(),
+                "data",
+                "eu_life_expectancy_raw.tsv"
+            )
+
+    def load(self) -> pd.DataFrame:
+        """
+        Loads data from a given file in a give path with a given format
+
+        :param path: str, path to the data file
+        :param format: str, file format, it can be json or csv like
+
+        :return: Pandas dataframe with data
+        """
+        configs = self.__configs[self.file_format]
+        loader = configs['method']
+        kwargs = configs['kwargs']
+        return loader(self.path, **kwargs)
+
+def load_data(path: str = None, file_format: str = None) -> pd.DataFrame:
+    """
+    Calls load from the DataLoader
+    :param path: str, path to the data file
+    :param format: str, file format, it can be json or csv like
+
     :return: Pandas dataframe with data
-    :raises FileNotFoundError: If the 'eu_life_expectancy_raw.tsv' file cannot
-     be found.
     """
-    if not path:
-        path = join(
-            __get_current_directory_full_path(),
-            "data",
-            "eu_life_expectancy_raw.tsv"
-        )
-    data = pd.read_csv(path, sep='\t')
-    return data
+    return DataLoader(path, file_format).load()
 
 def save_data(data: pd.DataFrame) -> None:
     """

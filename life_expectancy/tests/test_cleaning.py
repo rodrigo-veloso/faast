@@ -3,9 +3,15 @@ from unittest import mock
 
 import pandas as pd
 
-from life_expectancy.cleaning import main, clean_data
+from life_expectancy.cleaning import main, clean_data, Regions
 from . import FIXTURES_DIR
 
+
+def test_country_list(countries_list_expected):
+    """Test get countries list from Regions class"""
+    countries_list_actual = Regions.get_conutries_list()
+
+    assert not set(countries_list_actual) ^ set(countries_list_expected)
 
 def test_clean_data(pt_life_expectancy_expected, eu_life_expectancy_input):
     """Run the `clean_data` function and compare the output to the expected output"""

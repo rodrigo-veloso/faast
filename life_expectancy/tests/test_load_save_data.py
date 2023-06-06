@@ -8,8 +8,12 @@ from . import FIXTURES_DIR
 
 
 def test_load_data(eu_life_expectancy_input):
-    """Test the load_data function to check if the actual input is the same of the expected input (fixture)"""
-    pt_life_expectancy_input_actual = load_data(FIXTURES_DIR / "eu_life_expectancy_input.tsv" )
+    """Test the load_data function to check if the actual input is the same of the
+    expected input (fixture)"""
+    pt_life_expectancy_input_actual = load_data(
+        path=FIXTURES_DIR / "eu_life_expectancy_input.tsv",
+        file_format='csv'
+    )
     pd.testing.assert_frame_equal(
         pt_life_expectancy_input_actual, eu_life_expectancy_input
     )
