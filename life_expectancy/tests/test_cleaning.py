@@ -9,7 +9,7 @@ from . import FIXTURES_DIR
 
 def test_country_list(countries_list_expected):
     """Test get countries list from Regions class"""
-    countries_list_actual = Regions.get_conutries_list()
+    countries_list_actual = Regions.get_countries_list()
 
     assert not set(countries_list_actual) ^ set(countries_list_expected)
 

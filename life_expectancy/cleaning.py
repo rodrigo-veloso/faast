@@ -60,7 +60,7 @@ class Countries(Enum):
     SM = 'SAN_MARINO'
     RU = 'RUSSIA'
 
-def get_conutries_list():
+def get_countries_list():
     """Return list of countries"""
     return [e.value for e in Countries]
 
@@ -77,7 +77,7 @@ class Regions(Enum):
     EU28 = 'EUROPEAN_UNION_28'
 
 Regions = Enum('Regions', [(i.name, i.value) for i in chain(Countries, Regions)])
-Regions.get_conutries_list = get_conutries_list
+Regions.get_countries_list = get_countries_list
 
 def clean_data(data: pd.DataFrame, country: str = 'PT') -> pd.DataFrame:
     """
